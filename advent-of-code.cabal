@@ -5,9 +5,10 @@ author:             Vasil Shotarov
 maintainer:         vshotarov@gmail.com
 
 library Common
-    exposed-modules:  Common
+    exposed-modules:  Common, Vec
     build-depends:    base
                      ,directory
+    hs-source-dirs:   common
     default-language: Haskell2010
     ghc-options:      -Wall
                       -Wcompat

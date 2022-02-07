@@ -1,7 +1,8 @@
 module Main where
 
-import qualified Common
 import qualified Data.Set as Set
+import qualified Common
+import Vec (Vec2(..))
 
 main :: IO ()
 main = do
@@ -13,19 +14,18 @@ main = do
     putStrLn $ "Parsed input: " ++ (Common.truncateString $ show parsedInput)
 
     -- Solve
-    let addVec2 (x1,y1) (x2,y2) = (x1+x2,y1+y2)
-    let answer1 = length . Set.fromList $ scanl addVec2 (0,0) parsedInput
+    let answer1 = length . Set.fromList $ scanl (+) (Vec2 0 0) parsedInput
     let answer2 = length . Set.fromList . Common.flattenTuples2
-                $ scanl (\(s,r) d -> (r,addVec2 s d)) ((0,0),(0,0)) parsedInput
+                $ scanl (\(s,r) d -> (r,s + d)) ((Vec2 0 0),(Vec2 0 0)) parsedInput
 
     -- Print answers
     putStrLn $ "Part 1: " ++ show answer1
     putStrLn $ "Part 2: " ++ show answer2
 
-parse :: String -> [(Int,Int)]
+parse :: String -> [Vec2 Int]
 parse input = map parseOne input
-    where parseOne '^' = ( 0, 1)
-          parseOne '>' = ( 1, 0)
-          parseOne '<' = (-1, 0)
-          parseOne 'v' = ( 0,-1)
+    where parseOne '^' = Vec2   0   1
+          parseOne '>' = Vec2   1   0
+          parseOne '<' = Vec2 (-1)  0
+          parseOne 'v' = Vec2   0 (-1)
           parseOne x   = error $ "Unrecognized direction " ++ [x]
