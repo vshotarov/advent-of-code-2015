@@ -1,5 +1,7 @@
 module Common ( readInput
               , truncateString
+              , flattenTuples2
+              , everyNth
               ) where
 
 import System.Environment (getArgs, getProgName)
@@ -35,3 +37,11 @@ truncateString :: String -> String
 truncateString str | length str < 70 = str
                    | otherwise       = take 53 str ++ " ... "
                                     ++ (drop (length str - 13) str)
+
+flattenTuples2 :: [(a,a)] -> [a]
+flattenTuples2 []          = []
+flattenTuples2 ((x,y):xys) = x:y:flattenTuples2 xys
+
+everyNth :: Int -> [a] -> [a]
+everyNth _ []     = []
+everyNth n (x:xs) = x:(everyNth n (drop (n-1) xs))
