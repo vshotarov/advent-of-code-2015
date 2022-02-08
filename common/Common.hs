@@ -2,6 +2,8 @@ module Common ( readInput
               , truncateString
               , flattenTuples2
               , everyNth
+              , firstWhere
+              , firstIdWhere
               ) where
 
 import System.Environment (getArgs, getProgName)
@@ -45,3 +47,15 @@ flattenTuples2 ((x,y):xys) = x:y:flattenTuples2 xys
 everyNth :: Int -> [a] -> [a]
 everyNth _ []     = []
 everyNth n (x:xs) = x:(everyNth n (drop (n-1) xs))
+
+firstWhere :: (a -> Bool) -> [a] -> a
+firstWhere _ [] = error "firstWhere: on empty list"
+firstWhere predicament (x:_) | predicament x = x
+firstWhere predicament (_:xs)                = firstWhere predicament xs
+
+firstIdWhere :: (a -> Bool) -> [a] -> Int
+firstIdWhere _ [] = error "firstIdWhere: on empty list"
+firstIdWhere predicament xs = go xs 0
+    where go [] _ = error "firstIdWhere: no elements satisfy predicament"
+          go (x:_) n | predicament x = n
+          go (_:xs') n               = go xs' (n+1)
