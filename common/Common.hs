@@ -4,10 +4,15 @@ module Common ( readInput
               , everyNth
               , firstWhere
               , firstIdWhere
+              , sortBySnd
+              , sortByFst
+              , unique
+              , splitOnceOn
               ) where
 
 import System.Environment (getArgs, getProgName)
 import System.Directory (doesFileExist)
+import Data.List (sortBy, isPrefixOf)
 
 readInput :: IO String
 readInput = do
@@ -59,3 +64,23 @@ firstIdWhere predicament xs = go xs 0
     where go [] _ = error "firstIdWhere: no elements satisfy predicament"
           go (x:_) n | predicament x = n
           go (_:xs') n               = go xs' (n+1)
+
+sortByFst :: Ord a => [(a,b)] -> [(a,b)]
+sortByFst = sortBy (\(a,_) (b,_) -> compare a b)
+
+sortBySnd :: Ord b => [(a,b)] -> [(a,b)]
+sortBySnd = sortBy (\(_,a) (_,b) -> compare a b)
+
+unique :: Eq a => [a] -> [a]
+unique = foldr (\x acc -> if x `elem` acc then acc else x:acc) []
+
+splitOnceOn :: Eq a => [a] -> [a] -> ([a],[a])
+splitOnceOn [] _ = error "Can't splitOnceOn empty string"
+splitOnceOn delimiter xs = case go [] xs of
+                             [x] -> (x,[])
+                             [x,y] -> (x,y)
+                             _ -> error "splitOnceOn split more than once"
+        where go buffer [] = [reverse buffer]
+              go buffer xs' | isPrefixOf delimiter xs' = (reverse buffer):[xs'']
+                  where xs'' = drop (length delimiter) xs'
+              go buffer (x:xs') = go (x:buffer) xs'
