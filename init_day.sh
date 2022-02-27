@@ -34,8 +34,8 @@ executable $name
     main-is:          Main.hs
     build-depends:    base
                      ,Common
-					 ,containers
-					 ,split
+                     ,containers
+                     ,split
     hs-source-dirs:   $name
     default-language: Haskell2010
     ghc-options:      -Wall
