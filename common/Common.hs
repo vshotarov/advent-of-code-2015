@@ -8,10 +8,12 @@ module Common ( readInput
               , sortByFst
               , unique
               , splitOnceOn
+              , mapModify
               ) where
 
 import System.Environment (getArgs, getProgName)
 import System.Directory (doesFileExist)
+import qualified Data.Map as M (Map, (!), insert) 
 import Data.List (sortBy, isPrefixOf)
 
 readInput :: IO String
@@ -84,3 +86,6 @@ splitOnceOn delimiter xs = case go [] xs of
               go buffer xs' | isPrefixOf delimiter xs' = (reverse buffer):[xs'']
                   where xs'' = drop (length delimiter) xs'
               go buffer (x:xs') = go (x:buffer) xs'
+
+mapModify :: Ord a => a -> (b -> b) -> M.Map a b -> M.Map a b
+mapModify k f m = M.insert k (f $ m M.! k) m
